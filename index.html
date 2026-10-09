@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neel Saswade — Product Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://d8j0ntlcm91z4.cloudfront.net" crossorigin>
+<style>
+  :root {
+    --paper: #f2f2ef;
+    --ink: #3b3b39;
+    --ink-soft: #6f6f6b;
+    --line: rgba(40, 40, 30, 0.045);
+    --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --cell: clamp(56px, 7.6vw, 112px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: var(--paper); }
+
+  body {
+    font-family: var(--serif);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ---------- hero shell ---------- */
+  .hero {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 480px;
+    overflow: hidden;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell);
+    background-position: calc(var(--cell) * 0.45) calc(var(--cell) * 0.5);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  /* ---------- nav ---------- */
+  .nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 1.75vw, 26px);
+    padding: clamp(18px, 2.05vw, 30px) clamp(20px, 3.15vw, 48px);
+    font-family: var(--sans);
+    font-size: clamp(12px, 1.04vw, 14px);
+    letter-spacing: -0.005em;
+  }
+  .nav a { color: var(--ink-soft); text-decoration: none; transition: color .2s; }
+  .nav a:hover { color: #1d1d1b; }
+  .nav .brand { color: #2a2a28; margin-right: clamp(6px, 0.9vw, 14px); }
+
+  /* ---------- intro copy ---------- */
+  .intro {
+    position: absolute;
+    z-index: 6;
+    top: clamp(96px, 24.4vh, 260px);
+    left: 20.7vw;
+    width: min(60vw, 780px);
+  }
+  .intro h1 {
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(25px, 2.3vw, 36px);
+    line-height: 1.1;
+    letter-spacing: -0.005em;
+    color: #5d5d5a;
+  }
+  .intro p {
+    margin-top: clamp(12px, 1.3vw, 20px);
+    font-weight: 300;
+    font-size: clamp(16.5px, 1.56vw, 23px);
+    line-height: 1.62;
+    color: var(--ink);
+  }
+  .free {
+    margin-top: clamp(22px, 2.75vw, 42px);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: clamp(10px, 1.2vw, 16px);
+    font-weight: 300;
+    font-size: clamp(16.5px, 1.56vw, 23px);
+    color: var(--ink);
+  }
+  .tile {
+    --t: clamp(34px, 3.15vw, 44px);
+    width: var(--t);
+    height: var(--t);
+    border: 1px solid #dccf9f;
+    border-radius: 4px;
+    background: #f7edc6;
+    box-shadow: 0 1px 0 rgba(120, 100, 40, .18), inset 0 0 0 1px rgba(255, 255, 255, .5);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: transform .16s cubic-bezier(.3, 1.6, .5, 1), background .2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tile:hover { transform: translateY(-2px) rotate(-2deg); background: #faf2d2; }
+  .tile:active { transform: translateY(1px) scale(.94); }
+  .tile:focus-visible { outline: 2px solid #8a7a3a; outline-offset: 2px; }
+  .tile i { display: block; background-repeat: no-repeat; pointer-events: none; }
+
+  /* ---------- scene layers ---------- */
+  .layer { position: absolute; pointer-events: none; -webkit-user-drag: none; max-width: none; }
+  .grass { z-index: 1; filter: url(#crisp); }
+  #cast { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+  .tree {
+    z-index: 3;
+    transform-origin: 49% 96%;
+    animation: sway 5.5s ease-in-out infinite;
+  }
+  .tree.gust { animation: gust .95s ease-out; }
+  .grass.front { z-index: 4; }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-.35deg) skewX(.2deg); }
+    50% { transform: rotate(.5deg) skewX(-.5deg); }
+  }
+  @keyframes gust {
+    0% { transform: rotate(0) skewX(0); }
+    25% { transform: rotate(calc(var(--g, 1) * 2.2deg)) skewX(calc(var(--g, 1) * -2.6deg)); }
+    55% { transform: rotate(calc(var(--g, 1) * -.9deg)) skewX(calc(var(--g, 1) * 1deg)); }
+    100% { transform: rotate(-.35deg) skewX(.2deg); }
+  }
+
+  /* ---------- characters ---------- */
+  .ent { position: absolute; left: 0; top: 0; will-change: transform; }
+  .ent .spr {
+    position: absolute;
+    left: 0; bottom: 0;
+    background-repeat: no-repeat;
+    transform-origin: 50% 100%;
+  }
+  .ent.land .spr { animation: land .28s ease-out; }
+  @keyframes land {
+    0% { scale: 1.12 .84; }
+    60% { scale: .96 1.05; }
+    100% { scale: 1 1; }
+  }
+  .ent .say {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(11px, .95vw, 13.5px);
+    color: #9a9a95;
+    opacity: 0;
+    transform: translate(-10%, 4px);
+    transition: opacity .5s, transform .5s;
+  }
+  .ent .say.on { opacity: 1; transform: translate(-10%, 0); }
+
+  /* ---------- wind face ---------- */
+  #face {
+    position: absolute;
+    left: 0; top: 0;
+    z-index: 7;
+    width: 26px; height: 32px;
+    margin: -16px 0 0 -13px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .35s;
+    will-change: transform;
+  }
+  #face.on { opacity: 1; }
+  #face .flip { position: absolute; inset: 0; }
+  #face svg { position: absolute; overflow: visible; }
+  #face .head { left: 0; top: 0; width: 26px; height: 32px; }
+  #face .puff { display: none; }
+  #face.blow .calm { display: none; }
+  #face.blow .puff { display: block; }
+  #face .wind { left: 27px; top: 9px; width: 36px; height: 20px; opacity: 0; }
+  #face.blow .wind { animation: wind .6s ease-out; }
+  #face.blow .wind path { stroke-dasharray: 44; animation: draw .6s ease-out; }
+  @keyframes wind {
+    0% { opacity: 0; transform: translateX(-4px); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(12px); }
+  }
+  @keyframes draw { from { stroke-dashoffset: 44; } to { stroke-dashoffset: 0; } }
+
+  /* ---------- weather caption ---------- */
+  .weather {
+    position: absolute;
+    z-index: 6;
+    right: clamp(12px, 1.2vw, 20px);
+    bottom: clamp(10px, 1.1vw, 16px);
+    text-align: right;
+    font-family: var(--sans);
+    font-size: clamp(10px, .86vw, 12px);
+    line-height: 1.5;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(30, 50, 10, .45);
+    pointer-events: none;
+  }
+  .weather b { display: block; font-weight: 500; }
+  .weather span { opacity: .82; }
+
+  /* ---------- small screens ---------- */
+  @media (max-width: 760px) {
+    .intro {
+      left: 24px;
+      right: 24px;
+      width: auto;
+      top: clamp(84px, 15vh, 150px);
+    }
+    .intro p { line-height: 1.55; }
+    .nav { gap: 16px; }
+  }
+  @media (max-height: 560px) and (min-width: 761px) {
+    .intro { top: 78px; }
+  }
+  @media (hover: none) {
+    .tile:hover { transform: none; background: #f7edc6; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tree { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- keys out the pale matte fringe the generated grass PNG carries along its top edge -->
+  <filter id="crisp" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 -4 6 -3.6"/>
+  </filter>
+</svg>
+
+<section class="hero" id="hero">
+  <nav class="nav">
+    <a class="brand" href="#">Neel Saswade</a>
+    <a href="#work">Work</a>
+    <a href="#photo">Photo</a>
+    <a href="#about">About</a>
+  </nav>
+
+  <div class="intro">
+    <h1>Neel Saswade</h1>
+    <p>I'm a product designer based in San Francisco. Currently, I'm a designer at Glean working on proactivity, artifacts, and growth. Previously, I designed at Snap.</p>
+    <div class="free">
+      <span>In my free time,</span>
+      <button class="tile" type="button" data-drop="photo" aria-label="Drop a photographer"><i></i></button>
+      <button class="tile" type="button" data-drop="bike" aria-label="Drop a cyclist"><i></i></button>
+      <button class="tile" type="button" data-drop="hike" aria-label="Drop a hiker"><i></i></button>
+    </div>
+  </div>
+
+  <img class="layer grass" id="grassBack" alt="" draggable="false"
+       src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_123914_6dd68a06-2eb9-404d-a112-24a11ea0eb91.png">
+  <div id="cast"></div>
+  <img class="layer tree" id="tree" alt="" draggable="false"
+       src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_123918_f6bd028d-e515-4701-8f40-d8b58d652842.png">
+  <img class="layer grass front" id="grassFront" alt="" draggable="false"
+       src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_123914_6dd68a06-2eb9-404d-a112-24a11ea0eb91.png">
+
+  <div id="face" aria-hidden="true">
+    <div class="flip">
+      <svg class="head" viewBox="0 0 26 32" fill="none" stroke="#1f1f1d" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13.2 1.8c6.6-.2 10.6 6 10.7 14.300.1 8.300-4.300 13.900-10.500 14.100C7 30.400 2.300 24.800 2.200 16.500 2.100 8.500 6.300 2 13.200 1.800Z" fill="#f4f4f1"/>
+        <g class="calm">
+          <circle cx="9.200" cy="13" r=".9" fill="#1f1f1d" stroke="none"/>
+          <circle cx="16.800" cy="13" r=".9" fill="#1f1f1d" stroke="none"/>
+          <path d="M10.200 21.200q2.800 1.300 5.600 0"/>
+        </g>
+        <g class="puff">
+          <path d="M7.300 12.200l2.600 1.300-2.600 1.300M14.800 12.200l2.600 1.300-2.600 1.300"/>
+          <path d="M14.500 20.500c2-1.800 5.200-1.500 6.300.6M14.500 24c2 1.800 5.200 1.500 6.300-.6"/>
+          <ellipse cx="21.600" cy="22.200" rx="1.700" ry="2.100" fill="#f4f4f1"/>
+        </g>
+      </svg>
+      <svg class="wind" viewBox="0 0 36 20" fill="none" stroke="#1f1f1d" stroke-width="1.200" stroke-linecap="round">
+        <path d="M1 6c6-4 11 4 17 0s10-2 16 1"/>
+        <path d="M2 13c5-2 9 3 14 1 4-1.600 3.500-6 .5-5.500-2.500.4-2 3.500.5 3.500"/>
+        <path d="M20 16c4-2 8 1 13-1"/>
+      </svg>
+    </div>
+  </div>
+
+  <p class="weather">
+    <b>Slight breeze at Alamo Square right now</b>
+    <span><span id="clock">12:39 AM PDT</span> in San Francisco · 3 mph W wind</span>
+  </p>
+</section>
+
+<script>
+(() => {
+  const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/';
+
+  // Sprite sheets: 3 frames in a row on a transparent canvas. `segs` are the
+  // measured x-extents of each frame, y0/y1 the shared vertical extent.
+  const SHEETS = {
+    photo: {
+      src: CDN + 'hf_20261008_123923_8a3fdd7c-7108-4177-84f9-6c0de11261e8.png',
+      w: 1024, h: 688, y0: 209, y1: 504,
+      segs: [[114, 276], [425, 597], [800, 873]],
+      size: 1, speed: 20, fps: 3.2, seq: [0, 1], tilt: .3
+    },
+    bike: {
+      src: CDN + 'hf_20261008_123927_d13c5956-61be-4d15-9801-7d1363fed136.png',
+      w: 1344, h: 752, y0: 249, y1: 571,
+      segs: [[76, 413], [502, 837], [938, 1275]],
+      size: .92, speed: 96, fps: 9, seq: [0, 1, 2], tilt: 1
+    },
+    hike: {
+      src: CDN + 'hf_20261008_123931_17b37873-f5e1-40f4-90ca-00b40f5fd89f.png',
+      w: 1024, h: 688, y0: 182, y1: 507,
+      segs: [[75, 281], [412, 580], [734, 943]],
+      size: 1.1, speed: 36, fps: 4.6, seq: [0, 1, 2, 1], tilt: .3
+    }
+  };
+  for (const s of Object.values(SHEETS)) {
+    s.cw = Math.max(...s.segs.map(([a, b]) => b - a)) + 6;
+    s.ch = s.y1 - s.y0;
+    new Image().src = s.src;
+  }
+
+  // Top edge of the grass PNG (fraction of image height), sampled at 25 columns.
+  const GRASS = { w: 2688, h: 1152 };
+  const PROF = [.6016, .6137, .6285, .6519, .6701, .6918, .7083, .7231, .7361, .7413, .7569, .7648, .7648,
+                .7543, .7509, .7483, .7352, .7188, .697, .6814, .6667, .6424, .6328, .6198, .6007];
+  // Trunk foot inside the 1024² tree PNG.
+  const TREE = { fx: 503 / 1024, fy: 986 / 1024 };
+
+  const QUOTES = ['“Golden hour’s in 40”', '“Hold still, fog.”', '“One more frame.”', '“Light’s perfect.”', '“Nice breeze today.”'];
+
+  const hero = document.getElementById('hero');
+  const cast = document.getElementById('cast');
+  const grassBack = document.getElementById('grassBack');
+  const grassFront = document.getElementById('grassFront');
+  const tree = document.getElementById('tree');
+  const face = document.getElementById('face');
+  const faceFlip = face.querySelector('.flip');
+
+  let W = 0, H = 0, unit = 56;
+  const g = { x: 0, top: 0, w: 0, h: 0, sink: 0 };
+  const treePos = { x: 0, y: 0, h: 0 };
+  const ents = [];
+
+  function ground(x) {
+    const u = Math.min(1, Math.max(0, (x - g.x) / g.w)) * (PROF.length - 1);
+    const i = Math.min(PROF.length - 2, Math.floor(u));
+    const p = PROF[i] + (PROF[i + 1] - PROF[i]) * (u - i);
+    return g.top + p * g.h + g.sink;
+  }
+
+  function layout() {
+    const oldW = W;
+    W = hero.clientWidth;
+    H = hero.clientHeight;
+    unit = Math.min(66, Math.max(42, H * .072));
+
+    g.w = Math.max(W, 1100);
+    g.h = g.w * GRASS.h / GRASS.w;
+    g.x = (W - g.w) / 2;
+    const valley = Math.min(Math.max(56, H * .105), g.h * .21);   // grass depth at the dip
+    g.top = H - valley - PROF[12] * g.h;
+    g.sink = g.h * .037;
+
+    for (const [el, dy] of [[grassBack, 0], [grassFront, g.h * .017]]) {
+      el.style.width = g.w + 'px';
+      el.style.height = g.h + 'px';
+      el.style.left = g.x + 'px';
+      el.style.top = (g.top + dy) + 'px';
+    }
+
+    treePos.h = Math.min(430, Math.max(210, H * .4), W * .62);
+    treePos.x = W * (W < 760 ? .8 : .862);
+    treePos.y = ground(treePos.x) + g.sink * .5;
+    tree.style.width = tree.style.height = treePos.h + 'px';
+    tree.style.left = (treePos.x - TREE.fx * treePos.h) + 'px';
+    tree.style.top = (treePos.y - TREE.fy * treePos.h) + 'px';
+
+    for (const e of ents) {
+      if (oldW) e.x *= W / oldW;
+      size(e);
+      if (e.grounded) e.y = ground(e.x);
+    }
+    paintTiles();
+    if (!ents.length && W > 0) {
+      spawn('photo', W * .44, ground(W * .44), { grounded: true, mode: 'shoot', timer: 3.5, dir: 1 });
+    }
+  }
+
+  // ---------- sprites ----------
+  function size(e) {
+    const s = SHEETS[e.type];
+    e.k = unit * s.size / s.ch;
+    e.w = s.cw * e.k;
+    e.h = s.ch * e.k;
+    e.spr.style.width = e.w + 'px';
+    e.spr.style.height = e.h + 'px';
+    e.spr.style.left = (-e.w / 2) + 'px';
+    e.spr.style.backgroundSize = `${s.w * e.k}px ${s.h * e.k}px`;
+    e.shown = -1;
+  }
+
+  function showFrame(e, f) {
+    if (e.shown === f) return;
+    e.shown = f;
+    const s = SHEETS[e.type], [a, b] = s.segs[f];
+    e.spr.style.backgroundPosition = `${-((a + b) / 2 - s.cw / 2) * e.k}px ${-s.y0 * e.k}px`;
+  }
+
+  function paintTiles() {
+    document.querySelectorAll('.tile').forEach(t => {
+      const s = SHEETS[t.dataset.drop], f = t.dataset.drop === 'photo' ? 2 : 0;
+      const box = t.clientWidth - 8, k = Math.min(box / s.ch, box / s.cw), [a, b] = s.segs[f];
+      const i = t.firstElementChild;
+      i.style.width = s.cw * k + 'px';
+      i.style.height = s.ch * k + 'px';
+      i.style.backgroundImage = `url(${s.src})`;
+      i.style.backgroundSize = `${s.w * k}px ${s.h * k}px`;
+      i.style.backgroundPosition = `${-((a + b) / 2 - s.cw / 2) * k}px ${-s.y0 * k}px`;
+    });
+  }
+
+  function spawn(type, x, y, opts = {}) {
+    // one instance per character: a fresh drop replaces the old one
+    for (let i = ents.length - 1; i >= 0; i--) {
+      if (ents[i].type !== type) continue;
+      clearTimeout(ents[i].sayT);
+      ents[i].el.remove();
+      ents.splice(i, 1);
+    }
+
+    const el = document.createElement('div');
+    el.className = 'ent';
+    const spr = document.createElement('div');
+    spr.className = 'spr';
+    spr.style.backgroundImage = `url(${SHEETS[type].src})`;
+    const say = document.createElement('span');
+    say.className = 'say';
+    el.append(spr, say);
+    cast.append(el);
+
+    const e = {
+      type, el, spr, say, x, y,
+      vx: 0, vy: 0, dir: opts.dir || (Math.random() < .5 ? -1 : 1),
+      grounded: !!opts.grounded, bounced: false,
+      boost: 1, ft: Math.random() * 3, spin: 0,
+      mode: opts.mode || 'walk', timer: opts.timer || 2 + Math.random() * 3
+    };
+    size(e);
+    ents.push(e);
+    return e;
+  }
+
+  function speak(e) {
+    e.say.textContent = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    e.say.classList.add('on');
+    clearTimeout(e.sayT);
+    e.sayT = setTimeout(() => e.say.classList.remove('on'), 2600);
+  }
+
+  // ---------- simulation ----------
+  function update(e, dt) {
+    const s = SHEETS[e.type];
+    const scale = unit / 56;
+    e.boost += (1 - e.boost) * Math.min(1, dt * 1.1);
+
+    if (!e.grounded) {
+      e.vy += 1700 * scale * dt;
+      e.y += e.vy * dt;
+      e.x += e.vx * dt;
+      e.spin += dt;
+      const gy = ground(e.x);
+      if (e.y >= gy) {
+        e.y = gy;
+        if (e.vy > 320 * scale && !e.bounced) {
+          e.vy *= -.26;
+          e.bounced = true;
+        } else {
+          e.grounded = true;
+          e.bounced = false;
+          e.vx = 0;
+          e.el.classList.remove('land');
+          void e.el.offsetWidth;
+          e.el.classList.add('land');
+        }
+      }
+    } else {
+      let moving = true;
+      if (e.type === 'photo') {
+        e.timer -= dt;
+        if (e.timer <= 0) {
+          if (e.mode === 'walk') {
+            e.mode = 'shoot';
+            e.timer = 2.2 + Math.random() * 3.5;
+            if (Math.random() < .4) speak(e);
+          } else {
+            e.mode = 'walk';
+            e.timer = 1.6 + Math.random() * 3.2;
+            if (Math.random() < .5) e.dir *= -1;
+          }
+        }
+        moving = e.mode === 'walk';
+      }
+      if (moving) {
+        e.x += e.dir * s.speed * scale * e.boost * dt;
+        e.ft += dt * s.fps * Math.min(2.2, e.boost);
+      }
+      const m = e.w;
+      if (e.x > W + m) e.x = -m;
+      else if (e.x < -m) e.x = W + m;
+      e.y = ground(e.x);
+    }
+
+    showFrame(e, e.type === 'photo' && e.mode === 'shoot' && e.grounded
+      ? 2 : s.seq[Math.floor(e.ft) % s.seq.length]);
+
+    let rot;
+    if (e.grounded) rot = Math.atan((ground(e.x + 8) - ground(e.x - 8)) / 16) * s.tilt;
+    else rot = Math.sin(e.spin * 9) * .14;
+    e.el.style.transform = `translate3d(${e.x.toFixed(1)}px, ${e.y.toFixed(1)}px, 0) rotate(${rot.toFixed(3)}rad)`;
+    e.spr.style.transform = `scaleX(${e.dir})`;
+  }
+
+  // ---------- wind face ----------
+  const ptr = { x: 0, y: 0, seen: false };
+  const f = { x: 0, y: 0, side: -1, t: 0 };
+
+  function heroPoint(ev) {
+    const r = hero.getBoundingClientRect();
+    return [ev.clientX - r.left, ev.clientY - r.top];
+  }
+
+  hero.addEventListener('pointermove', ev => {
+    [ptr.x, ptr.y] = heroPoint(ev);
+    if (!ptr.seen) { ptr.seen = true; f.x = ptr.x - 40; f.y = ptr.y; face.classList.add('on'); }
+  });
+  hero.addEventListener('pointerleave', ev => {
+    if (ev.pointerType === 'mouse') { ptr.seen = false; face.classList.remove('on'); }
+  });
+
+  function blow() {
+    face.classList.remove('blow');
+    void face.offsetWidth;
+    face.classList.add('blow');
+    clearTimeout(blow.t);
+    blow.t = setTimeout(() => face.classList.remove('blow'), 620);
+
+    const reach = Math.max(260, Math.min(420, W * .26));
+    for (const e of ents) {
+      const dx = e.x - f.x, dy = (e.y - e.h / 2) - f.y;
+      const d = Math.hypot(dx, dy);
+      if (d > reach) continue;
+      const power = 1 - d / reach;
+      e.dir = dx >= 0 ? 1 : -1;
+      e.boost = 1.6 + power * 2.4;
+      if (e.type === 'photo') { e.mode = 'walk'; e.timer = 2 + Math.random() * 2; }
+      if (e.grounded && power > .25) {
+        e.grounded = false;
+        e.bounced = true;
+        e.vy = -(150 + power * 190) * unit / 56;
+        e.vx = e.dir * (40 + power * 90);
+      }
+    }
+    const tx = treePos.x - f.x, ty = (treePos.y - treePos.h * .5) - f.y;
+    if (Math.hypot(tx, ty) < reach * 1.25) {
+      tree.style.setProperty('--g', tx >= 0 ? 1 : -1);
+      tree.classList.remove('gust');
+      void tree.offsetWidth;
+      tree.classList.add('gust');
+    }
+  }
+  tree.addEventListener('animationend', ev => { if (ev.animationName === 'gust') tree.classList.remove('gust'); });
+
+  hero.addEventListener('pointerdown', ev => {
+    if (ev.target.closest('.tile, a')) return;
+    [ptr.x, ptr.y] = heroPoint(ev);
+    if (!ptr.seen || ev.pointerType !== 'mouse') {
+      // touch / first contact: the face pops up beside the tap
+      ptr.seen = true;
+      f.x = ptr.x + f.side * 38;
+      f.y = ptr.y;
+      face.classList.add('on');
+    }
+    blow();
+  });
+
+  // ---------- tiles: drop a character ----------
+  document.querySelectorAll('.tile').forEach(t => {
+    t.addEventListener('click', () => {
+      const r = t.getBoundingClientRect(), hr = hero.getBoundingClientRect();
+      const type = t.dataset.drop;
+      const e = spawn(type, r.left + r.width / 2 - hr.left, r.bottom - hr.top + unit * .6, {
+        dir: type === 'bike' ? 1 : undefined
+      });
+      e.vx = (Math.random() - .5) * 60;
+      e.vy = -120;
+    });
+  });
+
+  // ---------- clock ----------
+  const clock = document.getElementById('clock');
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles', timeZoneName: 'short'
+  });
+  const tick = () => { clock.textContent = fmt.format(new Date()); };
+  tick();
+  setInterval(tick, 20000);
+
+  // ---------- loop ----------
+  layout();
+  addEventListener('resize', layout);
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(.05, (now - last) / 1000);
+    last = now;
+    for (const e of ents) update(e, dt);
+
+    if (ptr.seen) {
+      // trail behind the cursor, staying on whichever side it is already on
+      if (Math.abs(f.x - ptr.x) > 6) f.side = f.x < ptr.x ? -1 : 1;
+      const tx = ptr.x + f.side * 38, ty = ptr.y + 4;
+      const k = 1 - Math.pow(.0025, dt);
+      f.x += (tx - f.x) * k;
+      f.y += (ty - f.y) * k;
+      f.t += dt;
+      const bob = Math.sin(f.t * 2.4) * 2.5;
+      face.style.transform = `translate3d(${f.x.toFixed(1)}px, ${(f.y + bob).toFixed(1)}px, 0)`;
+      faceFlip.style.transform = `scaleX(${-f.side})`;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
